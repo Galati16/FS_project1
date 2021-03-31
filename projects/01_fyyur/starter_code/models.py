@@ -4,10 +4,14 @@ db= SQLAlchemy()
 #----------------------------------------------------------------------------#
 # Models.
 #----------------------------------------------------------------------------#
-shows_table = db.Table('shows',
-    db.Column('venue_id', db.Integer, db.ForeignKey('Venue.id'),primary_key=True),
-    db.Column('artist_id', db.Integer, db.ForeignKey('Artist.id'),primary_key=True)
-    )
+class Shows(db.Model):
+    __tablename__='Shows'
+    
+    id = db.Column( db.Integer,primary_key=True, autoincrement=True)
+    venue_id = db.Column( db.Integer, db.ForeignKey('Venue.id'),primary_key=True)
+    artist_id = db.Column( db.Integer, db.ForeignKey('Artist.id'),primary_key=True)
+    start_time = db.Column( db.DateTime)
+    artists = db.relationship('Artist', backref=db.backref('venues', lazy=True))
           
  
 class Venue(db.Model):
@@ -19,16 +23,16 @@ class Venue(db.Model):
     state = db.Column(db.String(120), nullable=False)
     address = db.Column(db.String(120), nullable=False)
     phone = db.Column(db.String(120))
-    genres = db.Column(db.String(120))
+    genres = db.Column(db.ARRAY(db.String()))
     image_link = db.Column(db.String(500))
     facebook_link = db.Column(db.String(120))
     website_link = db.Column(db.String(120))
     looking_for_Talent = db.Column(db.Boolean, nullable=False,default=False)
     seeking_description=db.Column(db.String(1000))
-    artists = db.relationship('Artist',secondary=shows_table,backref=db.backref('venues', lazy=True))
+    shows = db.relationship('Shows',backref=db.backref('venues', lazy=True))
 
-    # TODO: implement any missing fields, as a database migration using Flask-Migrate
 
+ 
 class Artist(db.Model):
     __tablename__ = 'Artist'
 
@@ -37,7 +41,7 @@ class Artist(db.Model):
     city = db.Column(db.String(120))
     state = db.Column(db.String(120))
     phone = db.Column(db.String(120))
-    genres = db.Column(db.String(120))
+    genres = db.Column(db.ARRAY(db.String()))
     image_link = db.Column(db.String(500))
     facebook_link = db.Column(db.String(120))
     website_link = db.Column(db.String(120))
