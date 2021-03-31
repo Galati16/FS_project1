@@ -11,7 +11,7 @@ class Shows(db.Model):
     venue_id = db.Column( db.Integer, db.ForeignKey('Venue.id'),primary_key=True)
     artist_id = db.Column( db.Integer, db.ForeignKey('Artist.id'),primary_key=True)
     start_time = db.Column( db.DateTime)
-    artists = db.relationship('Artist', backref=db.backref('venues', lazy=True))
+    
           
  
 class Venue(db.Model):
@@ -30,7 +30,7 @@ class Venue(db.Model):
     looking_for_Talent = db.Column(db.Boolean, nullable=False,default=False)
     seeking_description=db.Column(db.String(1000))
     shows = db.relationship('Shows',backref=db.backref('venues', lazy=True))
-
+   
 
  
 class Artist(db.Model):
@@ -47,3 +47,5 @@ class Artist(db.Model):
     website_link = db.Column(db.String(120))
     looking_for_venue = db.Column(db.Boolean, nullable=False, default=False)
     seeking_description=db.Column(db.String(1000))
+    shows = db.relationship('Shows',backref=db.backref('artists', lazy=True))
+   
